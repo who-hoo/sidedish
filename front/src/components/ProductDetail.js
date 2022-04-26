@@ -1,5 +1,69 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
+
+function ProductDetail({ dishes }) {
+  const mainImage = useRef(dishes.images[0]);
+  const [amount, setAmount] = useState(1);
+  function addAmount() {
+    setAmount(amount + 1);
+  }
+  function decreaseAmount() {
+    if (amount > 1) setAmount(amount - 1);
+  }
+
+  function changeImage({ target }) {
+    mainImage.current.src = target.src;
+  }
+
+  return (
+    <DishDetail>
+      <ProductImages>
+        <MainImage src={dishes.images[0]} ref={mainImage}></MainImage>
+        <SubImages>
+          {dishes.images.map((src, index) => (
+            <SubImage key={index} src={src} onMouseEnter={changeImage}></SubImage>
+          ))}
+        </SubImages>
+      </ProductImages>
+      <ProductInfo>
+        <ProductName>{dishes.name}</ProductName>
+        <PrimeCost>{dishes.price.toLocaleString()}원</PrimeCost>
+        <BadgeAndPrice>
+          <Badges>
+            {dishes.badge_title.map(title => (
+              <Badge>{title}</Badge>
+            ))}
+          </Badges>
+          <Price>{dishes.discount_price.toLocaleString()}원</Price>
+        </BadgeAndPrice>
+        <Info>
+          <InfoTitles>
+            <PointTitle>적립금</PointTitle>
+            <DeliveryTitle>배송정보</DeliveryTitle>
+            <DeliveryPriceTitle>배송비</DeliveryPriceTitle>
+          </InfoTitles>
+          <InfoDetails>
+            <Point>{(dishes.discount_price * dishes.mileage_ratio).toLocaleString()}원</Point>
+            <Delivery>{dishes.early_delivery ? '서울 경기 새벽배송, ' : ''}전국 택배 배송</Delivery>
+            <DeliveryPrice>{dishes.delivery_price.toLocaleString()}원</DeliveryPrice>
+          </InfoDetails>
+        </Info>
+        <AmountAndCost>
+          <AmountButtons>
+            <MinusButton onClick={decreaseAmount}>-</MinusButton>
+            <Amount>{amount}</Amount>
+            <PlusButton onClick={addAmount}>+</PlusButton>
+          </AmountButtons>
+          <CostInfo>
+            <TotalCostTitle>총 주문금액</TotalCostTitle>
+            <TotalCost>{(dishes.discount_price * amount).toLocaleString()}원</TotalCost>
+          </CostInfo>
+        </AmountAndCost>
+        <OrderButton>주문하기</OrderButton>
+      </ProductInfo>
+    </DishDetail>
+  );
+}
 const DishDetail = styled.div`
   width: 860px;
   height: 520px;
@@ -63,6 +127,10 @@ const Badge = styled.div`
   font-size: 12px;
   line-height: 18px;
   color: #ffffff;
+`;
+const Badges = styled.div`
+  display: flex;
+  gap: 10px;
 `;
 const Price = styled.div`
   font-size: 20px;
@@ -153,64 +221,4 @@ const OrderButton = styled.button`
   font-weight: 700;
   font-size: 18px;
 `;
-function ProductDetail({ dishes }) {
-  const mainImage = useRef(dishes.images[0]);
-  const [amount, setAmount] = useState(1);
-  function addAmount() {
-    setAmount(amount + 1);
-  }
-  function decreaseAmount() {
-    if (amount > 1) setAmount(amount - 1);
-  }
-
-  function changeImage({ target }) {
-    mainImage.current.src = target.src;
-  }
-
-  return (
-    <DishDetail>
-      <ProductImages>
-        <MainImage src={dishes.images[0]} ref={mainImage}></MainImage>
-        <SubImages>
-          {dishes.images.map((src, index) => (
-            <SubImage key={index} src={src} onMouseEnter={changeImage}></SubImage>
-          ))}
-        </SubImages>
-      </ProductImages>
-      <ProductInfo>
-        <ProductName>{dishes.name}</ProductName>
-        <PrimeCost>{dishes.price.toLocaleString()}원</PrimeCost>
-        <BadgeAndPrice>
-          <Badge>{dishes.badge_title}</Badge>
-          <Price>{dishes.discount_price.toLocaleString()}원</Price>
-        </BadgeAndPrice>
-        <Info>
-          <InfoTitles>
-            <PointTitle>적립금</PointTitle>
-            <DeliveryTitle>배송정보</DeliveryTitle>
-            <DeliveryPriceTitle>배송비</DeliveryPriceTitle>
-          </InfoTitles>
-          <InfoDetails>
-            <Point>{(dishes.discount_price * dishes.mileage_ratio).toLocaleString()}원</Point>
-            <Delivery>{dishes.early_delivery ? '서울 경기 새벽배송, ' : ''}전국 택배 배송</Delivery>
-            <DeliveryPrice>{dishes.delivery_price.toLocaleString()}원</DeliveryPrice>
-          </InfoDetails>
-        </Info>
-        <AmountAndCost>
-          <AmountButtons>
-            <MinusButton onClick={decreaseAmount}>-</MinusButton>
-            <Amount>{amount}</Amount>
-            <PlusButton onClick={addAmount}>+</PlusButton>
-          </AmountButtons>
-          <CostInfo>
-            <TotalCostTitle>총 주문금액</TotalCostTitle>
-            <TotalCost>{(dishes.discount_price * amount).toLocaleString()}원</TotalCost>
-          </CostInfo>
-        </AmountAndCost>
-        <OrderButton>주문하기</OrderButton>
-      </ProductInfo>
-    </DishDetail>
-  );
-}
-
 export default ProductDetail;
