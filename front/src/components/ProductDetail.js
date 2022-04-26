@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
+import Badge from './Badge';
 
 function ProductDetail({ dishes }) {
   const mainImage = useRef(dishes.images[0]);
@@ -29,11 +30,7 @@ function ProductDetail({ dishes }) {
         <ProductName>{dishes.name}</ProductName>
         <PrimeCost>{dishes.price.toLocaleString()}원</PrimeCost>
         <BadgeAndPrice>
-          <Badges>
-            {dishes.badge_title.map(title => (
-              <Badge>{title}</Badge>
-            ))}
-          </Badges>
+          <Badge badge_title={dishes.badge_title}></Badge>
           <Price>{dishes.discount_price.toLocaleString()}원</Price>
         </BadgeAndPrice>
         <Info>
@@ -116,21 +113,6 @@ const BadgeAndPrice = styled.div`
   height: 30px;
   gap: 8px;
   margin-bottom: 24px;
-`;
-const Badge = styled.div`
-  box-sizing: border-box;
-  padding: 6px 16px;
-  display: grid;
-  place-content: center center;
-  background: #ff8e14;
-  border-radius: 999px;
-  font-size: 12px;
-  line-height: 18px;
-  color: #ffffff;
-`;
-const Badges = styled.div`
-  display: flex;
-  gap: 10px;
 `;
 const Price = styled.div`
   font-size: 20px;
