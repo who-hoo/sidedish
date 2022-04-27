@@ -23,4 +23,5 @@ public class Member {
             ", updatedAt=" + updatedAt +
             '}';
     }
+
 }
